@@ -1,7 +1,10 @@
 import express, { Request, Response } from 'express';
 import { chromium } from 'playwright-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
-import 'dotenv/config';
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config();
+}
 
 // Add stealth plugin - this uses the actual puppeteer stealth plugin!
 chromium.use(StealthPlugin());
