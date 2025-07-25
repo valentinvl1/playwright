@@ -3,9 +3,10 @@ import { testBotDetection } from './main';
 
 const app = express();
 
-app.get('/search', async (_req, res) => {
+app.get('/search', async (req, res) => {
+  const target = (req.query.url || req.query.q) as string | undefined;
   try {
-    await testBotDetection();
+    await testBotDetection(target);
     res.status(200).send('Test completed');
   } catch (error) {
     res.status(500).send('Error running test');
