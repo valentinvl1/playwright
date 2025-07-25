@@ -4,7 +4,7 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 // Add stealth plugin - this uses the actual puppeteer stealth plugin!
 chromium.use(StealthPlugin());
 
-export async function testBotDetection() {
+export async function testBotDetection(targetUrl: string = 'https://bot.sannysoft.com/') {
     console.log('🚀 Starting Playwright Stealth Test...\n');
 
     // Launch browser with stealth
@@ -26,9 +26,9 @@ export async function testBotDetection() {
     const page = await context.newPage();
 
     try {
-        // Test with bot detection site
-        console.log('📍 Testing: https://bot.sannysoft.com/');
-        await page.goto('https://bot.sannysoft.com/', { waitUntil: 'load' });
+        // Test with provided URL
+        console.log(`📍 Testing: ${targetUrl}`);
+        await page.goto(targetUrl, { waitUntil: 'load' });
 
         // Get page title
         const title = await page.title();
@@ -54,11 +54,7 @@ export async function testBotDetection() {
                                 : className?.includes('warn') ? 'warn'
                                     : className?.includes('failed') ? 'failed'
                                         : 'unknown'
-                        };
-                    })
-                    .filter(Boolean);
-            });
-
+@@ -62,34 +62,35 @@ export async function testBotDetection() {
             // Analyze and report
             const failed = results.filter(r => r?.status === 'failed');
             const warned = results.filter(r => r?.status === 'warn');
@@ -84,6 +80,7 @@ export async function testBotDetection() {
 
     } catch (error) {
         console.error('❌ Test failed:', error);
+        throw error;
     } finally {
         await browser.close();
     }
