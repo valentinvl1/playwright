@@ -15,6 +15,7 @@ app.get('/search', async (req: Request, res: Response) => {
     try {
         browser = await chromium.launch({
             headless: true,
+            slowMo: 100, // <--- ici pour ralentir les actions
             proxy: {
                 server: process.env.PROXY_SERVER,
                 username: process.env.PROXY_USERNAME,
@@ -29,11 +30,17 @@ app.get('/search', async (req: Request, res: Response) => {
         });
         const context = await browser.newContext({
             userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-            viewport: { width: 1366, height: 768 }
+            viewport: { width: 1366, height: 768 },
+            locale: 'fr-FR',           // <--- ici pour la langue
+            timezoneId: 'Europe/Paris',// <--- ici pour le fuseau horaire
+            colorScheme: 'dark'        // <--- ici pour le thème sombre
         });
         const page = await context.newPage();
         // Exemple : utiliser la query pour faire une recherche sur Google
         await page.goto(`https://www.google.com/search?q=${encodeURIComponent(String(query))}`, { waitUntil: 'load' });
+        // Ajout d'un délai aléatoire entre 1000 et 3000 ms
+        const randomDelay = Math.floor(Math.random() * (3000 - 1000 + 1)) + 1000;
+        await page.waitForTimeout(randomDelay);
         const title = await page.title();
         // On peut extraire d'autres infos si besoin
         res.json({
