@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { chromium } from 'playwright-extra';
 import StealthPlugin from 'puppeteer-extra-plugin-stealth';
+import 'dotenv/config';
 
 // Add stealth plugin - this uses the actual puppeteer stealth plugin!
 chromium.use(StealthPlugin());
@@ -14,6 +15,11 @@ app.get('/search', async (req: Request, res: Response) => {
     try {
         browser = await chromium.launch({
             headless: true,
+            proxy: {
+                server: process.env.PROXY_SERVER,
+                username: process.env.PROXY_USERNAME,
+                password: process.env.PROXY_PASSWORD
+            },
             args: [
                 '--no-sandbox',
                 '--disable-setuid-sandbox',
