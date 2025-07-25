@@ -4,7 +4,7 @@ import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 // Add stealth plugin - this uses the actual puppeteer stealth plugin!
 chromium.use(StealthPlugin());
 
-async function testBotDetection() {
+export async function testBotDetection() {
     console.log('🚀 Starting Playwright Stealth Test...\n');
 
     // Launch browser with stealth
@@ -89,5 +89,7 @@ async function testBotDetection() {
     }
 }
 
-// Run the test
-testBotDetection().catch(console.error);
+// Run the test when executed directly
+if (require.main === module) {
+    testBotDetection().catch(console.error);
+}
