@@ -13,6 +13,9 @@ app.get('/search', async (req: Request, res: Response) => {
     const query = req.query.q || '';
     let browser;
     try {
+        if (!process.env.PROXY_SERVER || !process.env.PROXY_USERNAME || !process.env.PROXY_PASSWORD) {
+            throw new Error('Les variables d\'environnement du proxy ne sont pas définies');
+        }
         browser = await chromium.launch({
             headless: true,
             slowMo: 100, // <--- ici pour ralentir les actions
