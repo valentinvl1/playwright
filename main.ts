@@ -39,7 +39,8 @@ app.get('/search', async (req: Request, res: Response) => {
             viewport: { width: 1366, height: 768 },
             locale: 'fr-FR',           // <--- ici pour la langue
             timezoneId: 'Europe/Paris',// <--- ici pour le fuseau horaire
-            colorScheme: 'dark'        // <--- ici pour le thème sombre
+            colorScheme: 'dark',        // <--- ici pour le thème sombre
+            ignoreHTTPSErrors: true
         });
         const page = await context.newPage();
         // Exemple : utiliser la query pour faire une recherche sur Google
